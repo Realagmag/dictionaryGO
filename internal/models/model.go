@@ -12,8 +12,8 @@ type EnglishWord struct {
 
 type Translation struct {
 	ID            uint        `gorm:"primaryKey"`
-	PolishWordID  uint        `gorm:"not null;index"`
-	EnglishWordID uint        `gorm:"not null;index"`
+	PolishWordID  uint        `gorm:"not null;index;uniqueIndex:idx_polish_english"`
+	EnglishWordID uint        `gorm:"not null;index;uniqueIndex:idx_polish_english"`
 	PolishWord    PolishWord  `gorm:"foreignKey:PolishWordID;constraint:OnDelete:CASCADE"`
 	EnglishWord   EnglishWord `gorm:"foreignKey:EnglishWordID;constraint:OnDelete:CASCADE"`
 	Examples      []Example   `gorm:"foreignKey:TranslationID"`
