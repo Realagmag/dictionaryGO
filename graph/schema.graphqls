@@ -1,0 +1,46 @@
+type PolishWord {
+  id: ID!
+  text: String!
+}
+
+type EnglishWord {
+  id: ID!
+  text: String!
+}
+
+type Example {
+  exampleId: ID!
+  text: String!
+}
+
+type Translation {
+  polishWord: PolishWord!
+  englishWord: EnglishWord!
+  examples: [Example!]!
+}
+
+input TranslationInput {
+  polishWord: String!
+  englishWord: String!
+  examples: [String!]!
+}
+
+type Query {
+  polishWords: [PolishWord!]!
+  englishWords: [EnglishWord!]!
+  translations: [Translation!]!
+  translationToEnglish(wordInPolish: String!): [Translation!]!
+  translationToPolish(wordInEnglish: String!): [Translation!]! 
+}
+
+type Mutation {
+  createPolishWord(word: String!): PolishWord!
+  createEnglishWord(word: String!): EnglishWord!
+  createTranslation(polishWord: String!, englishWord: String!, examples: [String!]): Translation!
+  createExample(translation: TranslationInput!): Example!
+
+  deletePolishWord(id: ID!): ID!
+  deleteEnglishWord(id: ID!): ID!
+  deleteTranslation(polishWord: String!, englishWord: String!): Translation!
+  deleteExample(id: ID!): ID!
+}
