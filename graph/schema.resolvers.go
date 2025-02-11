@@ -7,13 +7,21 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/realagmag/dictionaryGO/graph/model"
 )
 
 // CreatePolishWord is the resolver for the createPolishWord field.
 func (r *mutationResolver) CreatePolishWord(ctx context.Context, word string) (*model.PolishWord, error) {
-	panic(fmt.Errorf("not implemented: CreatePolishWord - createPolishWord"))
+	newWord := &model.PolishWord{
+		Text: word,
+	}
+	log.Println("Created PolishWord:", newWord)
+	if err := r.DB.Create(newWord).Error; err != nil {
+		return nil, err
+	}
+	return newWord, nil
 }
 
 // CreateEnglishWord is the resolver for the createEnglishWord field.
@@ -32,12 +40,12 @@ func (r *mutationResolver) CreateExample(ctx context.Context, translation model.
 }
 
 // DeletePolishWord is the resolver for the deletePolishWord field.
-func (r *mutationResolver) DeletePolishWord(ctx context.Context, id string) (string, error) {
+func (r *mutationResolver) DeletePolishWord(ctx context.Context, id int) (int, error) {
 	panic(fmt.Errorf("not implemented: DeletePolishWord - deletePolishWord"))
 }
 
 // DeleteEnglishWord is the resolver for the deleteEnglishWord field.
-func (r *mutationResolver) DeleteEnglishWord(ctx context.Context, id string) (string, error) {
+func (r *mutationResolver) DeleteEnglishWord(ctx context.Context, id int) (int, error) {
 	panic(fmt.Errorf("not implemented: DeleteEnglishWord - deleteEnglishWord"))
 }
 
@@ -47,13 +55,17 @@ func (r *mutationResolver) DeleteTranslation(ctx context.Context, polishWord str
 }
 
 // DeleteExample is the resolver for the deleteExample field.
-func (r *mutationResolver) DeleteExample(ctx context.Context, id string) (string, error) {
+func (r *mutationResolver) DeleteExample(ctx context.Context, id int) (int, error) {
 	panic(fmt.Errorf("not implemented: DeleteExample - deleteExample"))
 }
 
 // PolishWords is the resolver for the polishWords field.
 func (r *queryResolver) PolishWords(ctx context.Context) ([]*model.PolishWord, error) {
-	panic(fmt.Errorf("not implemented: PolishWords - polishWords"))
+	var words []*model.PolishWord
+	if err := r.DB.Find(&words).Error; err != nil {
+		return nil, err
+	}
+	return words, nil
 }
 
 // EnglishWords is the resolver for the englishWords field.

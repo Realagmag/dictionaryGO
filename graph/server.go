@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/realagmag/dictionaryGO/config"
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
@@ -21,7 +22,7 @@ func StartServer() {
 		port = defaultPort
 	}
 
-	srv := handler.New(NewExecutableSchema(Config{Resolvers: &Resolver{}}))
+	srv := handler.New(NewExecutableSchema(Config{Resolvers: &Resolver{config.DB}}))
 
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})

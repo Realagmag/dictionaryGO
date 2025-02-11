@@ -3,12 +3,12 @@
 package model
 
 type EnglishWord struct {
-	ID   string `json:"id"`
+	ID   int    `json:"id"`
 	Text string `json:"text"`
 }
 
 type Example struct {
-	ExampleID string `json:"exampleId"`
+	ExampleID int    `json:"exampleId"`
 	Text      string `json:"text"`
 }
 
@@ -16,7 +16,7 @@ type Mutation struct {
 }
 
 type PolishWord struct {
-	ID   string `json:"id"`
+	ID   int    `json:"id"`
 	Text string `json:"text"`
 }
 
