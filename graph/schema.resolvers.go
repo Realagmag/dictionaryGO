@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/realagmag/dictionaryGO/graph/model"
 )
@@ -17,7 +16,6 @@ func (r *mutationResolver) CreatePolishWord(ctx context.Context, word string) (*
 	newWord := &model.PolishWord{
 		Text: word,
 	}
-	log.Println("Created PolishWord:", newWord)
 	if err := r.DB.Create(newWord).Error; err != nil {
 		return nil, err
 	}
@@ -26,7 +24,13 @@ func (r *mutationResolver) CreatePolishWord(ctx context.Context, word string) (*
 
 // CreateEnglishWord is the resolver for the createEnglishWord field.
 func (r *mutationResolver) CreateEnglishWord(ctx context.Context, word string) (*model.EnglishWord, error) {
-	panic(fmt.Errorf("not implemented: CreateEnglishWord - createEnglishWord"))
+	newWord := &model.EnglishWord{
+		Text: word,
+	}
+	if err := r.DB.Create(newWord).Error; err != nil {
+		return nil, err
+	}
+	return newWord, nil
 }
 
 // CreateTranslation is the resolver for the createTranslation field.
@@ -70,7 +74,11 @@ func (r *queryResolver) PolishWords(ctx context.Context) ([]*model.PolishWord, e
 
 // EnglishWords is the resolver for the englishWords field.
 func (r *queryResolver) EnglishWords(ctx context.Context) ([]*model.EnglishWord, error) {
-	panic(fmt.Errorf("not implemented: EnglishWords - englishWords"))
+	var words []*model.EnglishWord
+	if err := r.DB.Find(&words).Error; err != nil {
+		return nil, err
+	}
+	return words, nil
 }
 
 // Translations is the resolver for the translations field.
