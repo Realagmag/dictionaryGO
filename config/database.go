@@ -26,6 +26,13 @@ func InitDB() {
 	if migErr != nil {
 		log.Fatal("Failed to migrate database:", migErr)
 	}
-
+	// GORM didn't apply on delete cascade to foreign key
+	db.Exec(`ALTER TABLE examples 
+         DROP CONSTRAINT IF EXISTS fk_translations_examples;
+         ALTER TABLE examples
+         ADD CONSTRAINT fk_translations_examples 
+         FOREIGN KEY (translation_id) 
+         REFERENCES translations(id) 
+         ON DELETE CASCADE;`)
 	fmt.Println("Database migration complete!")
 }
