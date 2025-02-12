@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/realagmag/dictionaryGO/internal/models"
+	dbModels "github.com/realagmag/dictionaryGO/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ func InitDB() {
 	DB = db
 	fmt.Println("Connected to PostgreSQL!")
 
-	migErr := DB.AutoMigrate(&models.PolishWord{}, &models.EnglishWord{}, &models.Translation{}, &models.Example{})
+	migErr := DB.AutoMigrate(&dbModels.PolishWord{}, &dbModels.EnglishWord{}, &dbModels.Translation{}, &dbModels.Example{})
 	if migErr != nil {
 		log.Fatal("Failed to migrate database:", migErr)
 	}

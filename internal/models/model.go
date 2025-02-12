@@ -1,4 +1,4 @@
-package models
+package dbModels
 
 type PolishWord struct {
 	ID   uint   `gorm:"primaryKey"`
@@ -23,5 +23,6 @@ type Example struct {
 	ID            uint        `gorm:"primaryKey"`
 	TranslationID uint        `gorm:"not null;index"`
 	Text          string      `gorm:"not null"`
+	InPolish      bool        `gorm:"not null"`
 	Translation   Translation `gorm:"foreignKey:TranslationID;constraint:OnDelete:CASCADE"`
 }

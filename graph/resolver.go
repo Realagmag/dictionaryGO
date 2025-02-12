@@ -4,8 +4,12 @@ package graph
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-import "gorm.io/gorm"
+import (
+	"github.com/realagmag/dictionaryGO/internal/converter"
+	"github.com/realagmag/dictionaryGO/internal/database"
+)
 
 type Resolver struct {
-	DB *gorm.DB
+	DBManager *database.DBManager
+	Converter *converter.Converter
 }

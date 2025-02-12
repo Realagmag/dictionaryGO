@@ -13,33 +13,37 @@ import (
 
 // CreatePolishWord is the resolver for the createPolishWord field.
 func (r *mutationResolver) CreatePolishWord(ctx context.Context, word string) (*model.PolishWord, error) {
-	newWord := &model.PolishWord{
-		Text: word,
-	}
-	if err := r.DB.Create(newWord).Error; err != nil {
+	polishWord, err := r.DBManager.AddPolishWord(word)
+	if err != nil {
 		return nil, err
 	}
-	return newWord, nil
+	return r.Converter.PolishToGraphType(polishWord), nil
 }
 
 // CreateEnglishWord is the resolver for the createEnglishWord field.
 func (r *mutationResolver) CreateEnglishWord(ctx context.Context, word string) (*model.EnglishWord, error) {
-	newWord := &model.EnglishWord{
-		Text: word,
-	}
-	if err := r.DB.Create(newWord).Error; err != nil {
+	englishWord, err := r.DBManager.AddEnglishWord(word)
+	if err != nil {
 		return nil, err
 	}
-	return newWord, nil
+	return r.Converter.EnglishToGraphType(englishWord), nil
 }
 
 // CreateTranslation is the resolver for the createTranslation field.
-func (r *mutationResolver) CreateTranslation(ctx context.Context, polishWord string, englishWord string, examples []string) (*model.Translation, error) {
-	panic(fmt.Errorf("not implemented: CreateTranslation - createTranslation"))
+func (r *mutationResolver) CreateTranslation(ctx context.Context, translation model.TranslationInput) (*model.Translation, error) {
+	translationModel, err := r.DBManager.AddTranslation(translation)
+	if err != nil {
+		return nil, err
+	}
+	err = r.DBManager.PreloadExamples(translationModel)
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.TranslationToGraphType(translationModel), nil
 }
 
 // CreateExample is the resolver for the createExample field.
-func (r *mutationResolver) CreateExample(ctx context.Context, translation model.TranslationInput) (*model.Example, error) {
+func (r *mutationResolver) CreateExample(ctx context.Context, example model.IndividualExampleInput) (*model.Example, error) {
 	panic(fmt.Errorf("not implemented: CreateExample - createExample"))
 }
 
@@ -65,20 +69,20 @@ func (r *mutationResolver) DeleteExample(ctx context.Context, id int) (int, erro
 
 // PolishWords is the resolver for the polishWords field.
 func (r *queryResolver) PolishWords(ctx context.Context) ([]*model.PolishWord, error) {
-	var words []*model.PolishWord
-	if err := r.DB.Find(&words).Error; err != nil {
+	words, err := r.DBManager.GetPolishWords()
+	if err != nil {
 		return nil, err
 	}
-	return words, nil
+	return r.Converter.PolishSliceToGraphType(words), nil
 }
 
 // EnglishWords is the resolver for the englishWords field.
 func (r *queryResolver) EnglishWords(ctx context.Context) ([]*model.EnglishWord, error) {
-	var words []*model.EnglishWord
-	if err := r.DB.Find(&words).Error; err != nil {
+	words, err := r.DBManager.GetEnglishWords()
+	if err != nil {
 		return nil, err
 	}
-	return words, nil
+	return r.Converter.EnglishSliceToGraphType(words), nil
 }
 
 // Translations is the resolver for the translations field.

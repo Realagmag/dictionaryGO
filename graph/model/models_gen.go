@@ -10,6 +10,17 @@ type EnglishWord struct {
 type Example struct {
 	ExampleID int    `json:"exampleId"`
 	Text      string `json:"text"`
+	InPolish  *bool  `json:"inPolish,omitempty"`
+}
+
+type ExampleInput struct {
+	Text     string `json:"text"`
+	InPolish bool   `json:"inPolish"`
+}
+
+type IndividualExampleInput struct {
+	TranslationID int           `json:"translationID"`
+	Example       *ExampleInput `json:"example"`
 }
 
 type Mutation struct {
@@ -30,7 +41,7 @@ type Translation struct {
 }
 
 type TranslationInput struct {
-	PolishWord  string   `json:"polishWord"`
-	EnglishWord string   `json:"englishWord"`
-	Examples    []string `json:"examples"`
+	PolishWord  string          `json:"polishWord"`
+	EnglishWord string          `json:"englishWord"`
+	Examples    []*ExampleInput `json:"examples,omitempty"`
 }

@@ -11,6 +11,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/realagmag/dictionaryGO/config"
+	"github.com/realagmag/dictionaryGO/internal/converter"
+	"github.com/realagmag/dictionaryGO/internal/database"
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
@@ -22,7 +24,12 @@ func StartServer() {
 		port = defaultPort
 	}
 
-	srv := handler.New(NewExecutableSchema(Config{Resolvers: &Resolver{config.DB}}))
+	srv := handler.New(NewExecutableSchema(
+		Config{
+			Resolvers: &Resolver{
+				database.NewDBManager(config.DB),
+				&converter.Converter{},
+			}}))
 
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})
