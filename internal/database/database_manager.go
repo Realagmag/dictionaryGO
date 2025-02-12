@@ -114,9 +114,14 @@ func (manager *DBManager) AddExampleToTranslation(example *model.ExampleInput, t
 	return newExample, nil
 }
 
-func (manager *DBManager) PreloadExamples(translation *dbModels.Translation) error {
-	if err := manager.db.Model(translation).Preload("Examples").First(translation).Error; err != nil {
-		return err
+func (manager *DBManager) PopulateTranslationWithAssociations(translation *dbModels.Translation) error {
+	return manager.db.Preload("PolishWord").Preload("EnglishWord").Preload("Examples").First(translation).Error
+}
+
+func (manager *DBManager) GetTranslations() ([]*dbModels.Translation, error) {
+	var translation []*dbModels.Translation
+	if err := manager.db.Find(&translation).Error; err != nil {
+		return nil, err
 	}
-	return nil
+	return translation, nil
 }

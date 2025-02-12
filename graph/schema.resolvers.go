@@ -35,8 +35,7 @@ func (r *mutationResolver) CreateTranslation(ctx context.Context, translation mo
 	if err != nil {
 		return nil, err
 	}
-	err = r.DBManager.PreloadExamples(translationModel)
-	if err != nil {
+	if err = r.DBManager.PopulateTranslationWithAssociations(translationModel); err != nil {
 		return nil, err
 	}
 	return r.Converter.TranslationToGraphType(translationModel), nil
@@ -44,7 +43,11 @@ func (r *mutationResolver) CreateTranslation(ctx context.Context, translation mo
 
 // CreateExample is the resolver for the createExample field.
 func (r *mutationResolver) CreateExample(ctx context.Context, example model.IndividualExampleInput) (*model.Example, error) {
-	panic(fmt.Errorf("not implemented: CreateExample - createExample"))
+	exampleModel, err := r.DBManager.AddExampleToTranslation(example.Example, uint(example.TranslationID))
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.ExampleToGraphType(exampleModel), nil
 }
 
 // DeletePolishWord is the resolver for the deletePolishWord field.
@@ -87,7 +90,18 @@ func (r *queryResolver) EnglishWords(ctx context.Context) ([]*model.EnglishWord,
 
 // Translations is the resolver for the translations field.
 func (r *queryResolver) Translations(ctx context.Context) ([]*model.Translation, error) {
-	panic(fmt.Errorf("not implemented: Translations - translations"))
+	translationDbModels, err := r.DBManager.GetTranslations()
+	if err != nil {
+		return nil, err
+	}
+	translations := make([]*model.Translation, len(translationDbModels))
+	for i, translationDbModel := range translationDbModels {
+		if err = r.DBManager.PopulateTranslationWithAssociations(translationDbModel); err != nil {
+			return nil, err
+		}
+		translations[i] = r.Converter.TranslationToGraphType(translationDbModel)
+	}
+	return translations, nil
 }
 
 // TranslationToEnglish is the resolver for the translationToEnglish field.
