@@ -94,24 +94,37 @@ func (r *queryResolver) Translations(ctx context.Context) ([]*model.Translation,
 	if err != nil {
 		return nil, err
 	}
-	translations := make([]*model.Translation, len(translationDbModels))
-	for i, translationDbModel := range translationDbModels {
-		if err = r.DBManager.PopulateTranslationWithAssociations(translationDbModel); err != nil {
-			return nil, err
-		}
-		translations[i] = r.Converter.TranslationToGraphType(translationDbModel)
+	translations, err := r.PrepareTranslationSliceToSend(&translationDbModels)
+	if err != nil {
+		return nil, err
 	}
 	return translations, nil
 }
 
 // TranslationToEnglish is the resolver for the translationToEnglish field.
 func (r *queryResolver) TranslationToEnglish(ctx context.Context, wordInPolish string) ([]*model.Translation, error) {
-	panic(fmt.Errorf("not implemented: TranslationToEnglish - translationToEnglish"))
+	translationsToEnglish, err := r.DBManager.GetTranslationsToEnglish(wordInPolish)
+	if err != nil {
+		return nil, err
+	}
+	translations, err := r.PrepareTranslationSliceToSend(&translationsToEnglish)
+	if err != nil {
+		return nil, err
+	}
+	return translations, nil
 }
 
 // TranslationToPolish is the resolver for the translationToPolish field.
 func (r *queryResolver) TranslationToPolish(ctx context.Context, wordInEnglish string) ([]*model.Translation, error) {
-	panic(fmt.Errorf("not implemented: TranslationToPolish - translationToPolish"))
+	translationsToPolish, err := r.DBManager.GetTranslationsToPolish(wordInEnglish)
+	if err != nil {
+		return nil, err
+	}
+	translations, err := r.PrepareTranslationSliceToSend(&translationsToPolish)
+	if err != nil {
+		return nil, err
+	}
+	return translations, nil
 }
 
 // Mutation returns MutationResolver implementation.

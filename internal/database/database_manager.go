@@ -119,9 +119,29 @@ func (manager *DBManager) PopulateTranslationWithAssociations(translation *dbMod
 }
 
 func (manager *DBManager) GetTranslations() ([]*dbModels.Translation, error) {
-	var translation []*dbModels.Translation
-	if err := manager.db.Find(&translation).Error; err != nil {
+	var translations []*dbModels.Translation
+	if err := manager.db.Find(&translations).Error; err != nil {
 		return nil, err
 	}
-	return translation, nil
+	return translations, nil
+}
+
+func (manager *DBManager) GetTranslationsToEnglish(wordInPolish string) ([]*dbModels.Translation, error) {
+	var translations []*dbModels.Translation
+	if err := manager.db.
+		Where("polish_word_id IN (SELECT id FROM polish_words WHERE text = ?)", wordInPolish).
+		Find(&translations).Error; err != nil {
+		return nil, err
+	}
+	return translations, nil
+}
+
+func (manager *DBManager) GetTranslationsToPolish(wordInEnglish string) ([]*dbModels.Translation, error) {
+	var translations []*dbModels.Translation
+	if err := manager.db.
+		Where("english_word_id IN (SELECT id FROM english_words WHERE text = ?)", wordInEnglish).
+		Find(&translations).Error; err != nil {
+		return nil, err
+	}
+	return translations, nil
 }
