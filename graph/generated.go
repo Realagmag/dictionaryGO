@@ -66,7 +66,7 @@ type ComplexityRoot struct {
 		DeleteEnglishWord func(childComplexity int, id int) int
 		DeleteExample     func(childComplexity int, id int) int
 		DeletePolishWord  func(childComplexity int, id int) int
-		DeleteTranslation func(childComplexity int, polishWord string, englishWord string) int
+		DeleteTranslation func(childComplexity int, id int) int
 	}
 
 	PolishWord struct {
@@ -97,7 +97,7 @@ type MutationResolver interface {
 	CreateExample(ctx context.Context, example model.IndividualExampleInput) (*model.Example, error)
 	DeletePolishWord(ctx context.Context, id int) (int, error)
 	DeleteEnglishWord(ctx context.Context, id int) (int, error)
-	DeleteTranslation(ctx context.Context, polishWord string, englishWord string) (*model.Translation, error)
+	DeleteTranslation(ctx context.Context, id int) (int, error)
 	DeleteExample(ctx context.Context, id int) (int, error)
 }
 type QueryResolver interface {
@@ -256,7 +256,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTranslation(childComplexity, args["polishWord"].(string), args["englishWord"].(string)), true
+		return e.complexity.Mutation.DeleteTranslation(childComplexity, args["id"].(int)), true
 
 	case "PolishWord.id":
 		if e.complexity.PolishWord.ID == nil {
@@ -636,41 +636,23 @@ func (ec *executionContext) field_Mutation_deletePolishWord_argsID(
 func (ec *executionContext) field_Mutation_deleteTranslation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteTranslation_argsPolishWord(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_deleteTranslation_argsID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["polishWord"] = arg0
-	arg1, err := ec.field_Mutation_deleteTranslation_argsEnglishWord(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["englishWord"] = arg1
+	args["id"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_deleteTranslation_argsPolishWord(
+func (ec *executionContext) field_Mutation_deleteTranslation_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("polishWord"))
-	if tmp, ok := rawArgs["polishWord"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
+) (int, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2int(ctx, tmp)
 	}
 
-	var zeroVal string
-	return zeroVal, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteTranslation_argsEnglishWord(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("englishWord"))
-	if tmp, ok := rawArgs["englishWord"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
-	}
-
-	var zeroVal string
+	var zeroVal int
 	return zeroVal, nil
 }
 
@@ -1434,7 +1416,7 @@ func (ec *executionContext) _Mutation_deleteTranslation(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteTranslation(rctx, fc.Args["polishWord"].(string), fc.Args["englishWord"].(string))
+		return ec.resolvers.Mutation().DeleteTranslation(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1446,9 +1428,9 @@ func (ec *executionContext) _Mutation_deleteTranslation(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Translation)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚖgithubᚗcomᚋrealagmagᚋdictionaryGOᚋgraphᚋmodelᚐTranslation(ctx, field.Selections, res)
+	return ec.marshalNID2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteTranslation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1458,17 +1440,7 @@ func (ec *executionContext) fieldContext_Mutation_deleteTranslation(ctx context.
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Translation_Id(ctx, field)
-			case "polishWord":
-				return ec.fieldContext_Translation_polishWord(ctx, field)
-			case "englishWord":
-				return ec.fieldContext_Translation_englishWord(ctx, field)
-			case "examples":
-				return ec.fieldContext_Translation_examples(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Translation", field.Name)
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	defer func() {

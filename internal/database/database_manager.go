@@ -145,3 +145,7 @@ func (manager *DBManager) GetTranslationsToPolish(wordInEnglish string) ([]*dbMo
 	}
 	return translations, nil
 }
+
+func (manager *DBManager) DeleteRecordFromTable(table interface{}, id uint) error {
+	return manager.db.Delete(&table, id).Error
+}

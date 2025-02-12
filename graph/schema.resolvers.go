@@ -6,9 +6,9 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/realagmag/dictionaryGO/graph/model"
+	dbModels "github.com/realagmag/dictionaryGO/internal/models"
 )
 
 // CreatePolishWord is the resolver for the createPolishWord field.
@@ -52,22 +52,34 @@ func (r *mutationResolver) CreateExample(ctx context.Context, example model.Indi
 
 // DeletePolishWord is the resolver for the deletePolishWord field.
 func (r *mutationResolver) DeletePolishWord(ctx context.Context, id int) (int, error) {
-	panic(fmt.Errorf("not implemented: DeletePolishWord - deletePolishWord"))
+	if err := r.DBManager.DeleteRecordFromTable(dbModels.PolishWord{}, uint(id)); err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 // DeleteEnglishWord is the resolver for the deleteEnglishWord field.
 func (r *mutationResolver) DeleteEnglishWord(ctx context.Context, id int) (int, error) {
-	panic(fmt.Errorf("not implemented: DeleteEnglishWord - deleteEnglishWord"))
+	if err := r.DBManager.DeleteRecordFromTable(dbModels.EnglishWord{}, uint(id)); err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 // DeleteTranslation is the resolver for the deleteTranslation field.
-func (r *mutationResolver) DeleteTranslation(ctx context.Context, polishWord string, englishWord string) (*model.Translation, error) {
-	panic(fmt.Errorf("not implemented: DeleteTranslation - deleteTranslation"))
+func (r *mutationResolver) DeleteTranslation(ctx context.Context, id int) (int, error) {
+	if err := r.DBManager.DeleteRecordFromTable(dbModels.Translation{}, uint(id)); err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 // DeleteExample is the resolver for the deleteExample field.
 func (r *mutationResolver) DeleteExample(ctx context.Context, id int) (int, error) {
-	panic(fmt.Errorf("not implemented: DeleteExample - deleteExample"))
+	if err := r.DBManager.DeleteRecordFromTable(dbModels.Example{}, uint(id)); err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 // PolishWords is the resolver for the polishWords field.

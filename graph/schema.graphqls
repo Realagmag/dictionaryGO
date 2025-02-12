@@ -53,6 +53,6 @@ type Mutation {
 
   deletePolishWord(id: ID!): ID!
   deleteEnglishWord(id: ID!): ID!
-  deleteTranslation(polishWord: String!, englishWord: String!): Translation!
+  deleteTranslation(id: ID!): ID!
   deleteExample(id: ID!): ID!
 }
