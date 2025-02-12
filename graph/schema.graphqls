@@ -9,12 +9,13 @@ type EnglishWord {
 }
 
 type Example {
-  exampleId: ID!
+  Id: ID!
   text: String!
   inPolish: Boolean 
 }
 
 type Translation {
+  Id: ID!
   polishWord: PolishWord!
   englishWord: EnglishWord!
   examples: [Example!]!

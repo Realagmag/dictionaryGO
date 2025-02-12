@@ -40,6 +40,7 @@ func (c *Converter) EnglishSliceToGraphType(words []*dbModels.EnglishWord) []*mo
 
 func (c *Converter) TranslationToGraphType(translation *dbModels.Translation) *model.Translation {
 	return &model.Translation{
+		ID:          int(translation.ID),
 		PolishWord:  c.PolishToGraphType(&translation.PolishWord),
 		EnglishWord: c.EnglishToGraphType(&translation.EnglishWord),
 		Examples:    c.ExampleSliceToGraphType(&translation.Examples),
@@ -48,9 +49,9 @@ func (c *Converter) TranslationToGraphType(translation *dbModels.Translation) *m
 
 func (c *Converter) ExampleToGraphType(example *dbModels.Example) *model.Example {
 	return &model.Example{
-		ExampleID: int(example.ID),
-		Text:      example.Text,
-		InPolish:  &example.InPolish,
+		ID:       int(example.ID),
+		Text:     example.Text,
+		InPolish: &example.InPolish,
 	}
 }
 

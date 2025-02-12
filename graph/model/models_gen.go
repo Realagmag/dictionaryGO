@@ -8,9 +8,9 @@ type EnglishWord struct {
 }
 
 type Example struct {
-	ExampleID int    `json:"exampleId"`
-	Text      string `json:"text"`
-	InPolish  *bool  `json:"inPolish,omitempty"`
+	ID       int    `json:"Id"`
+	Text     string `json:"text"`
+	InPolish *bool  `json:"inPolish,omitempty"`
 }
 
 type ExampleInput struct {
@@ -35,6 +35,7 @@ type Query struct {
 }
 
 type Translation struct {
+	ID          int          `json:"Id"`
 	PolishWord  *PolishWord  `json:"polishWord"`
 	EnglishWord *EnglishWord `json:"englishWord"`
 	Examples    []*Example   `json:"examples"`
