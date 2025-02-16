@@ -15,33 +15,21 @@ func NewDBManager(db *gorm.DB) *DBManager {
 }
 
 func (manager *DBManager) AddPolishWord(word string) (*dbModels.PolishWord, error) {
-	var existingWord dbModels.PolishWord
-	if err := manager.db.Where("text = ?", word).First(&existingWord).Error; err == nil {
-		return &existingWord, nil
-	}
-
-	newWord := &dbModels.PolishWord{
-		Text: word,
-	}
-	if err := manager.db.Create(newWord).Error; err != nil {
+	var polishWord dbModels.PolishWord
+	err := manager.db.Where("text = ?", word).FirstOrCreate(&polishWord, dbModels.PolishWord{Text: word}).Error
+	if err != nil {
 		return nil, err
 	}
-	return newWord, nil
+	return &polishWord, nil
 }
 
 func (manager *DBManager) AddEnglishWord(word string) (*dbModels.EnglishWord, error) {
-	var existingWord dbModels.EnglishWord
-	if err := manager.db.Where("text = ?", word).First(&existingWord).Error; err == nil {
-		return &existingWord, nil
-	}
-
-	newWord := &dbModels.EnglishWord{
-		Text: word,
-	}
-	if err := manager.db.Create(newWord).Error; err != nil {
+	var englishWord dbModels.EnglishWord
+	err := manager.db.Where("text = ?", word).FirstOrCreate(&englishWord, dbModels.EnglishWord{Text: word}).Error
+	if err != nil {
 		return nil, err
 	}
-	return newWord, nil
+	return &englishWord, nil
 }
 
 func (manager *DBManager) GetPolishWords() ([]*dbModels.PolishWord, error) {
@@ -64,7 +52,7 @@ func (manager *DBManager) AddTranslation(translationInput model.TranslationInput
 	polishWord := translationInput.PolishWord
 	englishWord := translationInput.EnglishWord
 	examples := translationInput.Examples
-	var translation *dbModels.Translation
+	var translation dbModels.Translation
 	err := manager.db.Transaction(func(tx *gorm.DB) error {
 		originalDB := manager.db
 		manager.db = tx
@@ -78,13 +66,13 @@ func (manager *DBManager) AddTranslation(translationInput model.TranslationInput
 			return err
 		}
 
-		translation = &dbModels.Translation{
+		translation = dbModels.Translation{
 			PolishWordID:  polishWordModel.ID,
 			EnglishWordID: englishWordModel.ID,
-			PolishWord:    *polishWordModel,
-			EnglishWord:   *englishWordModel,
 		}
-		if err := tx.Create(translation).Error; err != nil {
+		err = tx.Where("polish_word_id = ? AND english_word_id = ?", polishWordModel.ID, englishWordModel.ID).
+			FirstOrCreate(&translation).Error
+		if err != nil {
 			return err
 		}
 
@@ -99,19 +87,22 @@ func (manager *DBManager) AddTranslation(translationInput model.TranslationInput
 	if err != nil {
 		return nil, err
 	}
-	return translation, err
+	return &translation, err
 }
 
 func (manager *DBManager) AddExampleToTranslation(example *model.ExampleInput, translationID uint) (*dbModels.Example, error) {
-	newExample := &dbModels.Example{
-		TranslationID: translationID,
-		Text:          example.Text,
-		InPolish:      example.InPolish,
-	}
-	if err := manager.db.Create(newExample).Error; err != nil {
+	var dbExample dbModels.Example
+	err := manager.db.Where("translation_id = ? AND text = ?", translationID, example.Text).
+		FirstOrCreate(&dbExample, dbModels.Example{
+			TranslationID: translationID,
+			Text:          example.Text,
+			InPolish:      example.InPolish,
+		}).Error
+
+	if err != nil {
 		return nil, err
 	}
-	return newExample, nil
+	return &dbExample, nil
 }
 
 func (manager *DBManager) PopulateTranslationWithAssociations(translation *dbModels.Translation) error {
