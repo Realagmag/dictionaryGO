@@ -21,8 +21,8 @@ type Translation struct {
 
 type Example struct {
 	ID            uint        `gorm:"primaryKey"`
-	TranslationID uint        `gorm:"not null;index"`
-	Text          string      `gorm:"not null"`
+	TranslationID uint        `gorm:"not null;index;uniqueIndex:idx_translation_text"`
+	Text          string      `gorm:"not null;uniqueIndex:idx_translation_text"`
 	InPolish      bool        `gorm:"not null"`
 	Translation   Translation `gorm:"foreignKey:TranslationID;constraint:OnDelete:CASCADE"`
 }
