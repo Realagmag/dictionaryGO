@@ -147,7 +147,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.EnglishWord.Text(childComplexity), true
 
-	case "Example.Id":
+	case "Example.id":
 		if e.complexity.Example.ID == nil {
 			break
 		}
@@ -373,7 +373,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Translation.Examples(childComplexity), true
 
-	case "Translation.Id":
+	case "Translation.id":
 		if e.complexity.Translation.ID == nil {
 			break
 		}
@@ -1078,8 +1078,8 @@ func (ec *executionContext) fieldContext_EnglishWord_text(_ context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Example_Id(ctx context.Context, field graphql.CollectedField, obj *model.Example) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Example_Id(ctx, field)
+func (ec *executionContext) _Example_id(ctx context.Context, field graphql.CollectedField, obj *model.Example) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Example_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1109,7 +1109,7 @@ func (ec *executionContext) _Example_Id(ctx context.Context, field graphql.Colle
 	return ec.marshalNID2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Example_Id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Example_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Example",
 		Field:      field,
@@ -1368,8 +1368,8 @@ func (ec *executionContext) fieldContext_Mutation_createTranslation(ctx context.
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Translation_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Translation_id(ctx, field)
 			case "polishWord":
 				return ec.fieldContext_Translation_polishWord(ctx, field)
 			case "englishWord":
@@ -1433,8 +1433,8 @@ func (ec *executionContext) fieldContext_Mutation_createExample(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Example_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Example_id(ctx, field)
 			case "text":
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
@@ -1716,8 +1716,8 @@ func (ec *executionContext) fieldContext_Mutation_updateExampleText(ctx context.
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Example_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Example_id(ctx, field)
 			case "text":
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
@@ -2089,8 +2089,8 @@ func (ec *executionContext) fieldContext_Query_translations(_ context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Translation_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Translation_id(ctx, field)
 			case "polishWord":
 				return ec.fieldContext_Translation_polishWord(ctx, field)
 			case "englishWord":
@@ -2143,8 +2143,8 @@ func (ec *executionContext) fieldContext_Query_translationToEnglish(ctx context.
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Translation_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Translation_id(ctx, field)
 			case "polishWord":
 				return ec.fieldContext_Translation_polishWord(ctx, field)
 			case "englishWord":
@@ -2208,8 +2208,8 @@ func (ec *executionContext) fieldContext_Query_translationToPolish(ctx context.C
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Translation_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Translation_id(ctx, field)
 			case "polishWord":
 				return ec.fieldContext_Translation_polishWord(ctx, field)
 			case "englishWord":
@@ -2365,8 +2365,8 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Translation_Id(ctx context.Context, field graphql.CollectedField, obj *model.Translation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Translation_Id(ctx, field)
+func (ec *executionContext) _Translation_id(ctx context.Context, field graphql.CollectedField, obj *model.Translation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Translation_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2396,7 +2396,7 @@ func (ec *executionContext) _Translation_Id(ctx context.Context, field graphql.C
 	return ec.marshalNID2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Translation_Id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Translation_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Translation",
 		Field:      field,
@@ -2548,8 +2548,8 @@ func (ec *executionContext) fieldContext_Translation_examples(_ context.Context,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Id":
-				return ec.fieldContext_Example_Id(ctx, field)
+			case "id":
+				return ec.fieldContext_Example_id(ctx, field)
 			case "text":
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
@@ -4684,8 +4684,8 @@ func (ec *executionContext) _Example(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Example")
-		case "Id":
-			out.Values[i] = ec._Example_Id(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._Example_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -5053,8 +5053,8 @@ func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionS
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Translation")
-		case "Id":
-			out.Values[i] = ec._Translation_Id(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._Translation_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

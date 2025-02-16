@@ -9,13 +9,13 @@ type EnglishWord {
 }
 
 type Example {
-  Id: ID!
+  id: ID!
   text: String!
   inPolish: Boolean 
 }
 
 type Translation {
-  Id: ID!
+  id: ID!
   polishWord: PolishWord!
   englishWord: EnglishWord!
   examples: [Example!]!
@@ -42,7 +42,7 @@ type Query {
   englishWords: [EnglishWord!]!
   translations: [Translation!]!
   translationToEnglish(wordInPolish: String!): [Translation!]!
-  translationToPolish(wordInEnglish: String!): [Translation!]! 
+  translationToPolish(wordInEnglish: String!): [Translation!]!
 }
 
 type Mutation {
