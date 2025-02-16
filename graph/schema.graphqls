@@ -55,4 +55,8 @@ type Mutation {
   deleteEnglishWord(id: ID!): ID!
   deleteTranslation(id: ID!): ID!
   deleteExample(id: ID!): ID!
+
+  updateExampleText(id: ID!, text: String!): Example!
+  updatePolishWordText(id: ID!, text: String!): PolishWord!
+  updateEnglishWordText(id: ID!, text: String!): EnglishWord!
 }
