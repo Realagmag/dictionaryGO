@@ -1,6 +1,10 @@
 package database
 
 import (
+	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/realagmag/dictionaryGO/graph/model"
 	dbModels "github.com/realagmag/dictionaryGO/internal/models"
 	"gorm.io/gorm"
@@ -139,4 +143,60 @@ func (manager *DBManager) GetTranslationsToPolish(wordInEnglish string) ([]*dbMo
 
 func (manager *DBManager) DeleteRecordFromTable(table interface{}, id uint) error {
 	return manager.db.Delete(&table, id).Error
+}
+
+func (manager *DBManager) ChangeExampleText(id uint, text string) (*dbModels.Example, error) {
+	var example dbModels.Example
+	err := manager.db.First(&example, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no Example record with id: %d", id)
+		}
+		return nil, err
+	}
+	example.Text = text
+	if err := manager.db.Save(&example).Error; err != nil {
+		if strings.Contains(err.Error(), "idx_translation_text") {
+			return nil, fmt.Errorf("example with this text already exists")
+		}
+		return nil, err
+	}
+	return &example, nil
+}
+
+func (manager *DBManager) ChangePolishWordText(id uint, text string) (*dbModels.PolishWord, error) {
+	var polishWord dbModels.PolishWord
+	err := manager.db.First(&polishWord, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no PolishWord record with id: %d", id)
+		}
+		return nil, err
+	}
+	polishWord.Text = text
+	if err := manager.db.Save(&polishWord).Error; err != nil {
+		if strings.Contains(err.Error(), "uni_polish_words_text") {
+			return nil, fmt.Errorf("polish word with this text already exists")
+		}
+		return nil, err
+	}
+	return &polishWord, nil
+}
+func (manager *DBManager) ChangeEnglishWordText(id uint, text string) (*dbModels.EnglishWord, error) {
+	var englishWord dbModels.EnglishWord
+	err := manager.db.First(&englishWord, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no EnglishWord record with id: %d", id)
+		}
+		return nil, err
+	}
+	englishWord.Text = text
+	if err := manager.db.Save(&englishWord).Error; err != nil {
+		if strings.Contains(err.Error(), "uni_english_words_text") {
+			return nil, fmt.Errorf("english word with this text already exists")
+		}
+		return nil, err
+	}
+	return &englishWord, nil
 }

@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/realagmag/dictionaryGO/graph/model"
 	dbModels "github.com/realagmag/dictionaryGO/internal/models"
@@ -85,17 +84,29 @@ func (r *mutationResolver) DeleteExample(ctx context.Context, id int) (int, erro
 
 // UpdateExampleText is the resolver for the updateExampleText field.
 func (r *mutationResolver) UpdateExampleText(ctx context.Context, id int, text string) (*model.Example, error) {
-	panic(fmt.Errorf("not implemented: UpdateExampleText - updateExampleText"))
+	exampleModel, err := r.DBManager.ChangeExampleText(uint(id), text)
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.ExampleToGraphType(exampleModel), nil
 }
 
 // UpdatePolishWordText is the resolver for the updatePolishWordText field.
 func (r *mutationResolver) UpdatePolishWordText(ctx context.Context, id int, text string) (*model.PolishWord, error) {
-	panic(fmt.Errorf("not implemented: UpdatePolishWordText - updatePolishWordText"))
+	polishWordModel, err := r.DBManager.ChangePolishWordText(uint(id), text)
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.PolishToGraphType(polishWordModel), nil
 }
 
 // UpdateEnglishWordText is the resolver for the updateEnglishWordText field.
 func (r *mutationResolver) UpdateEnglishWordText(ctx context.Context, id int, text string) (*model.EnglishWord, error) {
-	panic(fmt.Errorf("not implemented: UpdateEnglishWordText - updateEnglishWordText"))
+	englishWordModel, err := r.DBManager.ChangeEnglishWordText(uint(id), text)
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.EnglishToGraphType(englishWordModel), nil
 }
 
 // PolishWords is the resolver for the polishWords field.
