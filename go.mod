@@ -4,6 +4,7 @@ go 1.23.5
 
 require (
 	github.com/99designs/gqlgen v0.17.64
+	github.com/stretchr/testify v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.22
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
@@ -34,7 +35,9 @@ require (
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 )
