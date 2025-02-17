@@ -51,7 +51,7 @@ func (c *Converter) ExampleToGraphType(example *dbModels.Example) *model.Example
 	return &model.Example{
 		ID:       int(example.ID),
 		Text:     example.Text,
-		InPolish: &example.InPolish,
+		InPolish: example.InPolish,
 	}
 }
 

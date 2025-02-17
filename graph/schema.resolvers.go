@@ -159,11 +159,46 @@ func (r *queryResolver) TranslationToPolish(ctx context.Context, wordInEnglish s
 	if err != nil {
 		return nil, err
 	}
-	translations, err := r.PrepareTranslationSliceToSend(&translationsToPolish)
+	return r.PrepareTranslationSliceToSend(&translationsToPolish)
+}
+
+// GetPolishWord is the resolver for the getPolishWord field.
+func (r *queryResolver) GetPolishWord(ctx context.Context, id int) (*model.PolishWord, error) {
+	polishWordDbModel, err := r.DBManager.GetPolishWordById(uint(id))
 	if err != nil {
 		return nil, err
 	}
-	return translations, nil
+	return r.Converter.PolishToGraphType(polishWordDbModel), nil
+}
+
+// GetEnglishWord is the resolver for the getEnglishWord field.
+func (r *queryResolver) GetEnglishWord(ctx context.Context, id int) (*model.EnglishWord, error) {
+	englishWordDbModel, err := r.DBManager.GetEnglishWordById(uint(id))
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.EnglishToGraphType(englishWordDbModel), nil
+}
+
+// GetExample is the resolver for the getExample field.
+func (r *queryResolver) GetExample(ctx context.Context, id int) (*model.Example, error) {
+	exampleDbModel, err := r.DBManager.GetExampleById(uint(id))
+	if err != nil {
+		return nil, err
+	}
+	return r.Converter.ExampleToGraphType(exampleDbModel), nil
+}
+
+// GetTranslation is the resolver for the getTranslation field.
+func (r *queryResolver) GetTranslation(ctx context.Context, id int) (*model.Translation, error) {
+	translationDbModel, err := r.DBManager.GetTranslationById(uint(id))
+	if err != nil {
+		return nil, err
+	}
+	if err := r.DBManager.PopulateTranslationWithAssociations(translationDbModel); err != nil {
+		return nil, err
+	}
+	return r.Converter.TranslationToGraphType(translationDbModel), nil
 }
 
 // Mutation returns MutationResolver implementation.

@@ -200,3 +200,51 @@ func (manager *DBManager) ChangeEnglishWordText(id uint, text string) (*dbModels
 	}
 	return &englishWord, nil
 }
+
+func (manager *DBManager) GetPolishWordById(id uint) (*dbModels.PolishWord, error) {
+	var polishWord dbModels.PolishWord
+
+	if err := manager.db.First(&polishWord, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no PolishWord record with id: %d", id)
+		}
+		return nil, err
+	}
+	return &polishWord, nil
+}
+
+func (manager *DBManager) GetEnglishWordById(id uint) (*dbModels.EnglishWord, error) {
+	var englishWord dbModels.EnglishWord
+
+	if err := manager.db.First(&englishWord, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no EnglishWord record with id: %d", id)
+		}
+		return nil, err
+	}
+	return &englishWord, nil
+}
+
+func (manager *DBManager) GetExampleById(id uint) (*dbModels.Example, error) {
+	var example dbModels.Example
+
+	if err := manager.db.First(&example, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no Example record with id: %d", id)
+		}
+		return nil, err
+	}
+	return &example, nil
+}
+
+func (manager *DBManager) GetTranslationById(id uint) (*dbModels.Translation, error) {
+	var translation dbModels.Translation
+
+	if err := manager.db.First(&translation, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("no Translation record with id: %d", id)
+		}
+		return nil, err
+	}
+	return &translation, nil
+}

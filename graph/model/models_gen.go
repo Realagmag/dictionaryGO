@@ -10,7 +10,7 @@ type EnglishWord struct {
 type Example struct {
 	ID       int    `json:"id"`
 	Text     string `json:"text"`
-	InPolish *bool  `json:"inPolish,omitempty"`
+	InPolish bool   `json:"inPolish"`
 }
 
 type ExampleInput struct {

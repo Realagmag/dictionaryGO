@@ -11,7 +11,7 @@ type EnglishWord {
 type Example {
   id: ID!
   text: String!
-  inPolish: Boolean 
+  inPolish: Boolean!
 }
 
 type Translation {
@@ -43,6 +43,10 @@ type Query {
   translations: [Translation!]!
   translationToEnglish(wordInPolish: String!): [Translation!]!
   translationToPolish(wordInEnglish: String!): [Translation!]!
+  getPolishWord(id: ID!): PolishWord!
+  getEnglishWord(id: ID!): EnglishWord!
+  getExample(id: ID!): Example!
+  getTranslation(id: ID!): Translation!
 }
 
 type Mutation {
