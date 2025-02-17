@@ -53,9 +53,10 @@ type ComplexityRoot struct {
 	}
 
 	Example struct {
-		ID       func(childComplexity int) int
-		InPolish func(childComplexity int) int
-		Text     func(childComplexity int) int
+		ID            func(childComplexity int) int
+		InPolish      func(childComplexity int) int
+		Text          func(childComplexity int) int
+		TranslationID func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -175,6 +176,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Example.Text(childComplexity), true
+
+	case "Example.translationID":
+		if e.complexity.Example.TranslationID == nil {
+			break
+		}
+
+		return e.complexity.Example.TranslationID(childComplexity), true
 
 	case "Mutation.createEnglishWord":
 		if e.complexity.Mutation.CreateEnglishWord == nil {
@@ -1358,6 +1366,50 @@ func (ec *executionContext) fieldContext_Example_inPolish(_ context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Example_translationID(ctx context.Context, field graphql.CollectedField, obj *model.Example) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Example_translationID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TranslationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNID2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Example_translationID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Example",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createPolishWord(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createPolishWord(ctx, field)
 	if err != nil {
@@ -1590,6 +1642,8 @@ func (ec *executionContext) fieldContext_Mutation_createExample(ctx context.Cont
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
 				return ec.fieldContext_Example_inPolish(ctx, field)
+			case "translationID":
+				return ec.fieldContext_Example_translationID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Example", field.Name)
 		},
@@ -1873,6 +1927,8 @@ func (ec *executionContext) fieldContext_Mutation_updateExampleText(ctx context.
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
 				return ec.fieldContext_Example_inPolish(ctx, field)
+			case "translationID":
+				return ec.fieldContext_Example_translationID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Example", field.Name)
 		},
@@ -2552,6 +2608,8 @@ func (ec *executionContext) fieldContext_Query_getExample(ctx context.Context, f
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
 				return ec.fieldContext_Example_inPolish(ctx, field)
+			case "translationID":
+				return ec.fieldContext_Example_translationID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Example", field.Name)
 		},
@@ -2955,6 +3013,8 @@ func (ec *executionContext) fieldContext_Translation_examples(_ context.Context,
 				return ec.fieldContext_Example_text(ctx, field)
 			case "inPolish":
 				return ec.fieldContext_Example_inPolish(ctx, field)
+			case "translationID":
+				return ec.fieldContext_Example_translationID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Example", field.Name)
 		},
@@ -5097,6 +5157,11 @@ func (ec *executionContext) _Example(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "inPolish":
 			out.Values[i] = ec._Example_inPolish(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "translationID":
+			out.Values[i] = ec._Example_translationID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

@@ -12,6 +12,7 @@ type Example {
   id: ID!
   text: String!
   inPolish: Boolean!
+  translationID: ID!
 }
 
 type Translation {

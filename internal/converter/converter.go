@@ -49,9 +49,10 @@ func (c *Converter) TranslationToGraphType(translation *dbModels.Translation) *m
 
 func (c *Converter) ExampleToGraphType(example *dbModels.Example) *model.Example {
 	return &model.Example{
-		ID:       int(example.ID),
-		Text:     example.Text,
-		InPolish: example.InPolish,
+		ID:            int(example.ID),
+		Text:          example.Text,
+		InPolish:      example.InPolish,
+		TranslationID: int(example.TranslationID),
 	}
 }
 

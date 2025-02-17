@@ -8,9 +8,10 @@ type EnglishWord struct {
 }
 
 type Example struct {
-	ID       int    `json:"id"`
-	Text     string `json:"text"`
-	InPolish bool   `json:"inPolish"`
+	ID            int    `json:"id"`
+	Text          string `json:"text"`
+	InPolish      bool   `json:"inPolish"`
+	TranslationID int    `json:"translationID"`
 }
 
 type ExampleInput struct {
