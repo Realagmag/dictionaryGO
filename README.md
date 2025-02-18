@@ -9,7 +9,7 @@ In order to run the app you must create `.env` file in project's root directory 
 docker compose up -d
 ```
 
-This will start Postresql database server on localhost:8080.
+This will start Postresql database server on localhost:5432.
 
 To run the app use:
 
