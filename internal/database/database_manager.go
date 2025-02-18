@@ -142,6 +142,9 @@ func (manager *DBManager) AddExampleToTranslation(example *model.ExampleInput, t
 		}).Error
 
 	if err != nil {
+		if strings.Contains(err.Error(), "fk_translations_examples") {
+			return nil, customErrors.ErrTranslationNotFound
+		}
 		return nil, err
 	}
 	return &dbExample, nil

@@ -298,6 +298,17 @@ func TestAddSimilarExampleToExistingTranslation(t *testing.T) {
 	assert.Len(t, translation.Examples, 4)
 }
 
+func TestAddExampleToNotExistingTranslation(t *testing.T) {
+	defer clearTestDB(manager.db)
+	example, err := manager.AddExampleToTranslation(
+		&model.ExampleInput{Text: "jeden", InPolish: true},
+		6,
+	)
+	assert.Error(t, err)
+	assert.Nil(t, example)
+	assert.Equal(t, customErrors.ErrTranslationNotFound, err)
+}
+
 func TestGetPolishWords(t *testing.T) {
 	defer clearTestDB(manager.db)
 
