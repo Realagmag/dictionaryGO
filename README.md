@@ -16,6 +16,7 @@ To run the app use:
 ```bash
 go run main.go
 ```
+App will start on localhost:8080. You can open it in a browser to use GraphQL playground. Example usage of queires and mutations is provided in `example_usage.md` file.
 
 To run the tests use:
 
