@@ -543,6 +543,14 @@ func TestChangeExampleTextViolatesUniqueConstraint(t *testing.T) {
 	assert.Equal(t, customErrors.ErrExampleAlreadyExists, err)
 }
 
+func TestChangeExampleTextOnNonExistingExample(t *testing.T) {
+	defer clearTestDB(manager.db)
+
+	_, err := manager.ChangeExampleText(555, "Dziecko je cukierka")
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrExampleNotFound, err)
+}
+
 func TestPreventDuplicatePolishWordsWhileCreating(t *testing.T) {
 	defer clearTestDB(manager.db)
 
@@ -564,6 +572,17 @@ func TestPreventDuplicatePolishWordsWhileCreating(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestChangePolishWordTextCorrect(t *testing.T) {
+	defer clearTestDB(manager.db)
+
+	originalWord, _ := manager.AddPolishWord("książka")
+	polishWords, _ := manager.GetPolishWords()
+	word, err := manager.ChangePolishWordText(polishWords[0].ID, "stół")
+	assert.NoError(t, err)
+	assert.Equal(t, originalWord.ID, word.ID)
+	assert.NotEqual(t, originalWord.Text, word.Text)
+}
+
 func TestPreventDuplicatePolishWordsWhileUpdating(t *testing.T) {
 	defer clearTestDB(manager.db)
 
@@ -576,6 +595,15 @@ func TestPreventDuplicatePolishWordsWhileUpdating(t *testing.T) {
 	assert.Equal(t, customErrors.ErrPolishWordAlreadyExists, err)
 	polishWords, _ = manager.GetPolishWords()
 	assert.Len(t, polishWords, 2)
+}
+
+func TestChangePolishWordOnNonExistingPolishWord(t *testing.T) {
+	defer clearTestDB(manager.db)
+
+	word, err := manager.ChangePolishWordText(555, "przykład")
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrPolishWordNotFound, err)
+	assert.Nil(t, word)
 }
 
 func TestPreventDuplicateEnglishWordsWhileCreating(t *testing.T) {
@@ -599,6 +627,17 @@ func TestPreventDuplicateEnglishWordsWhileCreating(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestChangeEnglishWordTextCorrect(t *testing.T) {
+	defer clearTestDB(manager.db)
+
+	originalWord, _ := manager.AddEnglishWord("book")
+	englishWords, _ := manager.GetEnglishWords()
+	word, err := manager.ChangeEnglishWordText(englishWords[0].ID, "table")
+	assert.NoError(t, err)
+	assert.Equal(t, originalWord.ID, word.ID)
+	assert.NotEqual(t, originalWord.Text, word.Text)
+}
+
 func TestPreventDuplicateEnglishWordsWhileUpdating(t *testing.T) {
 	defer clearTestDB(manager.db)
 
@@ -611,6 +650,15 @@ func TestPreventDuplicateEnglishWordsWhileUpdating(t *testing.T) {
 	assert.Equal(t, customErrors.ErrEnglishWordAlreadyExists, err)
 	englishWords, _ = manager.GetEnglishWords()
 	assert.Len(t, englishWords, 2)
+}
+
+func TestChangeEnglishWordOnNonExistingEnglishWord(t *testing.T) {
+	defer clearTestDB(manager.db)
+
+	word, err := manager.ChangeEnglishWordText(555, "example")
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrEnglishWordNotFound, err)
+	assert.Nil(t, word)
 }
 
 func TestPreventDuplicateWordsWhileCreatingTranslations(t *testing.T) {
@@ -686,4 +734,61 @@ func TestAddEveryExampleToTranslationWhileConcurentRequests(t *testing.T) {
 		fmt.Println(example.ID, example.Text)
 	}
 	assert.Len(t, translation.Examples, 100, "Each thread adds its unique example to translation")
+}
+
+func TestGetPolishWordByIdCorrect(t *testing.T) {
+	defer clearTestDB(manager.db)
+	polishWord, _ := manager.AddPolishWord("słowo")
+	word, err := manager.GetPolishWordById(polishWord.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, polishWord, word)
+}
+
+func TestGetPolishWordByIdWordNotExists(t *testing.T) {
+	defer clearTestDB(manager.db)
+	word, err := manager.GetPolishWordById(555)
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrPolishWordNotFound, err)
+	assert.Nil(t, word)
+}
+
+func TestGetEnglishWordByIdCorrect(t *testing.T) {
+	defer clearTestDB(manager.db)
+	englishWord, _ := manager.AddEnglishWord("word")
+	word, err := manager.GetEnglishWordById(englishWord.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, englishWord, word)
+}
+
+func TestGetEnglishWordByIdWordNotExists(t *testing.T) {
+	defer clearTestDB(manager.db)
+	word, err := manager.GetEnglishWordById(555)
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrEnglishWordNotFound, err)
+	assert.Nil(t, word)
+}
+
+func TestGetExampleByIdCorrect(t *testing.T) {
+	defer clearTestDB(manager.db)
+	translation, _ := manager.AddTranslation(
+		model.TranslationInput{
+			PolishWord:  "poduszka",
+			EnglishWord: "pillow",
+			Examples: []*model.ExampleInput{
+				{Text: "miękka poduszka", InPolish: true},
+			},
+		},
+	)
+	manager.PopulateTranslationWithAssociations(translation)
+	example, err := manager.GetExampleById(translation.Examples[0].ID)
+	assert.NoError(t, err)
+	assert.Equal(t, "miękka poduszka", example.Text)
+}
+
+func TestGetTranslationByIdTranslationNotExists(t *testing.T) {
+	defer clearTestDB(manager.db)
+	translation, err := manager.GetTranslationById(555)
+	assert.Error(t, err)
+	assert.Equal(t, customErrors.ErrTranslationNotFound, err)
+	assert.Nil(t, translation)
 }
